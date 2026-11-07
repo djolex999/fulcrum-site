@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fulcrum</title>
-<meta name="description" content="Adapty sada dozvoljava AI agentima da menjaju vaše A/B testove paywall ekrana. Agenti stalno proveravaju rezultate, i upravo tako lažni pobednici stižu u produkciju. Fulcrum je MCP server između agenta i Adapty-ja: agent čita sve, a svaka izmena prolazi statistiku, politiku i čoveka pre nego što je Fulcrum izvrši.">
+<meta name="description" content="Agenti zaviruju u rezultate, a to košta novca u oba smera. U sintetičkoj demo aplikaciji hakatona agent koji svake nedelje zaviri u rezultate pustio bi 16. avgusta pogrešan paywall i ostavio pravog pobednika vrednog oko $19 hiljada da nedeljama nepotrebno čeka. Fulcrum blokira lažne pobednike i pušta prave na prvoj validnoj proveri. On je jedini ulaz između agenta i Adapty-ja: svaka izmena prvo prolazi statistiku, politiku i čoveka.">
 <meta property="og:title" content="Fulcrum">
-<meta property="og:description" content="Adapty sada dozvoljava AI agentima da menjaju vaše A/B testove paywall ekrana. Agenti stalno proveravaju rezultate, i upravo tako lažni pobednici stižu u produkciju. Fulcrum je MCP server između agenta i Adapty-ja: agent čita sve, a svaka izmena prolazi statistiku, politiku i čoveka pre nego što je Fulcrum izvrši.">
+<meta property="og:description" content="Agenti zaviruju u rezultate, a to košta novca u oba smera. U sintetičkoj demo aplikaciji hakatona agent koji svake nedelje zaviri u rezultate pustio bi 16. avgusta pogrešan paywall i ostavio pravog pobednika vrednog oko $19 hiljada da nedeljama nepotrebno čeka. Fulcrum blokira lažne pobednike i pušta prave na prvoj validnoj proveri. On je jedini ulaz između agenta i Adapty-ja: svaka izmena prvo prolazi statistiku, politiku i čoveka.">
 <meta property="og:type" content="website">
 <link rel="alternate" hreflang="en" href="https://djolex999.github.io/fulcrum-site/">
 <link rel="alternate" hreflang="sr" href="https://djolex999.github.io/fulcrum-site/sr/">
@@ -128,6 +128,8 @@ p{margin:0}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px;display:grid;gap:10px;align-content:start}
 .card p{color:var(--muted);font-size:15.5px}
 @media (max-width:860px){.cards{grid-template-columns:1fr}}
+.cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:860px){.cards.two{grid-template-columns:1fr}}
 
 footer{border-top:1px solid var(--line);padding-block:40px calc(40px + env(safe-area-inset-bottom));font-size:14.5px;color:var(--muted)}
 footer .wrap{display:grid;gap:8px}
@@ -205,7 +207,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line-strong)}
     <div class="stack">
       <p class="eyebrow">Napravljeno na Adapty hakatonu u Beogradu · novembar 2026</p>
       <h1>AI agenti su dobili ključeve. Fulcrum je jedini ulaz.</h1>
-      <p class="lede">Adapty sada dozvoljava AI agentima da menjaju vaše A/B testove paywall ekrana. Agenti stalno proveravaju rezultate, i upravo tako lažni pobednici stižu u produkciju. Fulcrum je MCP server između agenta i Adapty-ja: agent čita sve, a svaka izmena prolazi statistiku, politiku i čoveka pre nego što je Fulcrum izvrši.</p>
+      <p class="lede">Agenti zaviruju u rezultate, a to košta novca u oba smera. U sintetičkoj demo aplikaciji hakatona agent koji svake nedelje zaviri u rezultate pustio bi 16. avgusta pogrešan paywall i ostavio pravog pobednika vrednog oko $19 hiljada da nedeljama nepotrebno čeka. Fulcrum blokira lažne pobednike i pušta prave na prvoj validnoj proveri. On je jedini ulaz između agenta i Adapty-ja: svaka izmena prvo prolazi statistiku, politiku i čoveka.</p>
       <div class="btns">
         <a class="btn primary" href="https://github.com/djolex999/fulcrum">Pogledaj kod</a>
         <a class="btn" href="#how">Kako radi</a>      </div>
@@ -360,12 +362,23 @@ pending <span class="p">→</span> human approves <span class="p">→</span> <sp
   </div>
 </section>
 
+<section id="why">
+  <div class="wrap">
+    <p class="eyebrow">Zašto je to važno</p>
+    <h2 style="margin-top:12px">Bezbedne izmene od agenata dobre su i za Adapty.</h2>
+    <div class="cards two">
+      <div class="card"><h3>Priča za platformu</h3><p>Adapty je upravo dao agentima 27 alata za upis, a pre pokretanja ili zaustavljanja oni traže od modela da potvrdi. Adapty zarađuje udeo u prihodu svojih klijenata, pa pogrešna odluka o testu košta i Adapty. Fulcrum je sloj politika koji uključivanje upisa za agente čini bezbednim, za bilo koji MCP klijent.</p></div>
+      <div class="card"><h3>Zašto AI</h3><p>Statistika je namerno deterministički kod: pravilo zaustavljanja koje bi model mogao da zaobiđe ne bi vredelo ništa. AI je agent koji radi posao rasta: čita podatke, pronalazi sledeću hipotezu, predlaže test i objašnjava presude. Svaki Fulcrumov odgovor je napisan za tog agenta: zašto ne i šta dalje.</p></div>
+    </div>
+  </div>
+</section>
+
 <section id="built">
   <div class="wrap">
     <p class="eyebrow">Kako smo ga napravili</p>
     <h2 style="margin-top:12px">Svako pravilo ima test. Svaki broj je proveren dvaput.</h2>
     <div class="cards">
-      <div class="card"><h3>Specifikacija → testovi → kod</h3><p>Svako pravilo je kriterijum prihvatanja sa testom koji nosi njegovo ime: 188 testova, uključujući poseban skup napada.</p></div>
+      <div class="card"><h3>Specifikacija → testovi → kod</h3><p>Svako pravilo je kriterijum prihvatanja sa testom koji nosi njegovo ime: 194 testa, uključujući poseban skup napada.</p></div>
       <div class="card"><h3>Nezavisni recenzenti</h3><p>Novi AI recenzenti videli su samo diff i specifikaciju. Jedan je otkrio da agent može da odobri sopstveni zahtev; drugi je oborio našu demo scenu koja nije izdržala proveru.</p></div>
       <div class="card"><h3>Brojevi provereni dvaput</h3><p>Agent bez pristupa našem kodu ponovo je izračunao svaki broj iz sirovih podataka pre nego što je stigao na slajd.</p></div>
     </div>

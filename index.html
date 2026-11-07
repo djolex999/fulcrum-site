@@ -4,9 +4,9 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>Fulcrum</title>
-<meta name="description" content="Adapty now lets AI agents change your paywall tests. Agents check results constantly, and that is exactly how fake winners ship. Fulcrum is an MCP server between the agent and Adapty: the agent reads everything, and every change passes statistics, a policy and a human before Fulcrum makes it.">
+<meta name="description" content="Agents peek, and peeking costs money both ways. On the hackathon’s synthetic demo app, a weekly-peeking agent would have shipped the wrong paywall on 16 August, and left a real winner worth about $19k running weeks too long. Fulcrum blocks fake winners and releases real ones at the first valid look. It is the only door between the agent and Adapty: every change passes statistics, a policy and a human first.">
 <meta property="og:title" content="Fulcrum">
-<meta property="og:description" content="Adapty now lets AI agents change your paywall tests. Agents check results constantly, and that is exactly how fake winners ship. Fulcrum is an MCP server between the agent and Adapty: the agent reads everything, and every change passes statistics, a policy and a human before Fulcrum makes it.">
+<meta property="og:description" content="Agents peek, and peeking costs money both ways. On the hackathon’s synthetic demo app, a weekly-peeking agent would have shipped the wrong paywall on 16 August, and left a real winner worth about $19k running weeks too long. Fulcrum blocks fake winners and releases real ones at the first valid look. It is the only door between the agent and Adapty: every change passes statistics, a policy and a human first.">
 <meta property="og:type" content="website">
 <link rel="alternate" hreflang="en" href="https://djolex999.github.io/fulcrum-site/">
 <link rel="alternate" hreflang="sr" href="https://djolex999.github.io/fulcrum-site/sr/">
@@ -128,6 +128,8 @@ p{margin:0}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:26px;display:grid;gap:10px;align-content:start}
 .card p{color:var(--muted);font-size:15.5px}
 @media (max-width:860px){.cards{grid-template-columns:1fr}}
+.cards.two{grid-template-columns:repeat(2,minmax(0,1fr))}
+@media (max-width:860px){.cards.two{grid-template-columns:1fr}}
 
 footer{border-top:1px solid var(--line);padding-block:40px calc(40px + env(safe-area-inset-bottom));font-size:14.5px;color:var(--muted)}
 footer .wrap{display:grid;gap:8px}
@@ -205,7 +207,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line-strong)}
     <div class="stack">
       <p class="eyebrow">Built at the Adapty Hackathon Belgrade · Nov 2026</p>
       <h1>AI agents got the keys. Fulcrum is the only door.</h1>
-      <p class="lede">Adapty now lets AI agents change your paywall tests. Agents check results constantly, and that is exactly how fake winners ship. Fulcrum is an MCP server between the agent and Adapty: the agent reads everything, and every change passes statistics, a policy and a human before Fulcrum makes it.</p>
+      <p class="lede">Agents peek, and peeking costs money both ways. On the hackathon’s synthetic demo app, a weekly-peeking agent would have shipped the wrong paywall on 16 August, and left a real winner worth about $19k running weeks too long. Fulcrum blocks fake winners and releases real ones at the first valid look. It is the only door between the agent and Adapty: every change passes statistics, a policy and a human first.</p>
       <div class="btns">
         <a class="btn primary" href="https://github.com/djolex999/fulcrum">See the code</a>
         <a class="btn" href="#how">How it works</a>      </div>
@@ -360,12 +362,23 @@ pending <span class="p">→</span> human approves <span class="p">→</span> <sp
   </div>
 </section>
 
+<section id="why">
+  <div class="wrap">
+    <p class="eyebrow">Why it matters</p>
+    <h2 style="margin-top:12px">Safe agent writes are good for Adapty, too.</h2>
+    <div class="cards two">
+      <div class="card"><h3>The platform story</h3><p>Adapty just gave agents 27 write tools, and before a start or stop they ask the model to confirm. Adapty earns a share of its customers’ revenue, so a wrong test decision costs Adapty too. Fulcrum is the policy layer that makes switching on agent writes safe, for any MCP client.</p></div>
+      <div class="card"><h3>Why AI</h3><p>The statistics are deterministic code on purpose: a stopping rule a model could talk itself past would be worthless. The AI is the agent doing the growth work: reading the data, finding the next hypothesis, proposing the test, explaining verdicts. Every Fulcrum reply is written for that agent: why not, and what to do next.</p></div>
+    </div>
+  </div>
+</section>
+
 <section id="built">
   <div class="wrap">
     <p class="eyebrow">How we built it</p>
     <h2 style="margin-top:12px">Every rule has a test. Every number was checked twice.</h2>
     <div class="cards">
-      <div class="card"><h3>Spec → tests → code</h3><p>Every rule is an acceptance criterion with a test named after it: 188 tests, including a named attack suite.</p></div>
+      <div class="card"><h3>Spec → tests → code</h3><p>Every rule is an acceptance criterion with a test named after it: 194 tests, including a named attack suite.</p></div>
       <div class="card"><h3>Independent reviewers</h3><p>Fresh AI reviewers saw only the diff and the spec. One found the agent could approve its own request; one killed a demo scene of ours that didn’t hold up.</p></div>
       <div class="card"><h3>Numbers checked twice</h3><p>An agent with no access to our code re-computed every number from the raw data before it went on a slide.</p></div>
     </div>
