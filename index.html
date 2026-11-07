@@ -8,6 +8,9 @@
 <meta property="og:title" content="Fulcrum">
 <meta property="og:description" content="Adapty now lets AI agents change your paywall tests. Agents check results constantly, and that is exactly how fake winners ship. Fulcrum is an MCP server between the agent and Adapty: the agent reads everything, and every change passes statistics, a policy and a human before Fulcrum makes it.">
 <meta property="og:type" content="website">
+<link rel="alternate" hreflang="en" href="https://djolex999.github.io/fulcrum-site/">
+<link rel="alternate" hreflang="sr" href="https://djolex999.github.io/fulcrum-site/sr/">
+<link rel="alternate" hreflang="ru" href="https://djolex999.github.io/fulcrum-site/ru/">
 <meta name="twitter:card" content="summary">
 <meta name="color-scheme" content="light dark">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -54,6 +57,9 @@ p{margin:0}
 .nav ul{display:flex;gap:22px;list-style:none;margin:0;padding:0;font-size:14px}
 .nav ul a{text-decoration:none;color:var(--muted)}
 .nav ul a:hover{color:var(--text)}
+.nav .lang{display:flex;gap:2px;border:1px solid var(--line-strong);border-radius:8px;padding:2px}
+.nav .lang a{font:600 12px/1 var(--mono);letter-spacing:.06em;padding:6px 8px;border-radius:6px}
+.nav .lang a[aria-current]{background:var(--text);color:var(--bg)}
 @media (max-width:760px){.nav{position:static}.nav ul li:not(.keep){display:none}}
 
 /* hero */
@@ -187,6 +193,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line-strong)}
       <li><a href="#evidence">Evidence</a></li>
       <li><a href="#architecture">Architecture</a></li>
       <li class="keep"><a href="https://github.com/djolex999/fulcrum">Code</a></li>
+      <li class="keep lang"><a href="./" hreflang="en" aria-current="page">EN</a><a href="sr/" hreflang="sr">SR</a><a href="ru/" hreflang="ru">RU</a></li>
     </ul>
   </div>
 </nav>
