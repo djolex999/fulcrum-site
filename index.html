@@ -132,6 +132,45 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line-strong)}
 .js-anim .zpts{opacity:0}
 .js-anim.drawn .zline{transition:stroke-dashoffset 1.8s ease-out;stroke-dashoffset:0}
 .js-anim.drawn .zpts{transition:opacity .4s ease 1.6s;opacity:1}
+
+/* motion: everything below only runs when the visitor allows motion; content is fully visible without JS */
+@media (prefers-reduced-motion:no-preference){
+  /* hero: the lever drops in and settles on the fulcrum */
+  .lever{transform-box:view-box;transform-origin:180px 44px;animation:settle 1.8s cubic-bezier(.3,1.4,.5,1) .3s both}
+  @keyframes settle{0%{transform:rotate(11deg)}55%{transform:rotate(-6deg)}78%{transform:rotate(-1.5deg)}100%{transform:rotate(-3deg)}}
+  .hero .stack>*{animation:rise .8s ease-out both}
+  .hero .stack>*:nth-child(2){animation-delay:.08s}.hero .stack>*:nth-child(3){animation-delay:.16s}
+  .hero .stack>*:nth-child(4){animation-delay:.24s}.hero .stack>*:nth-child(5){animation-delay:.32s}
+  @keyframes rise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+  /* scroll reveal, staggered with --d */
+  .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s cubic-bezier(.2,.7,.2,1);transition-delay:var(--d,0s)}
+  .js .reveal.in{opacity:1;transform:none}
+
+  /* terminal cards print top to bottom, then a blinking cursor */
+  .js .term.reveal{opacity:1;transform:none;clip-path:inset(0 0 100% 0);transition:clip-path 1.4s steps(7,end) .2s}
+  .js .term.reveal.in{clip-path:inset(0 0 0 0)}
+  .js .term.in::after{content:"▍";color:var(--term-accent);animation:blink 1s steps(1) 1.6s infinite;opacity:0}
+  @keyframes blink{0%{opacity:1}50%{opacity:0}}
+
+  /* architecture: a request travels agent → Fulcrum → human → Adapty, on a loop */
+  .arch.in .arrow{animation:flow 3.2s ease-in-out infinite}
+  .arch.in .arrow:nth-of-type(4){animation-delay:.8s}
+  .arch.in .arrow:nth-of-type(6){animation-delay:1.6s}
+  @keyframes flow{0%,100%{color:var(--muted);text-shadow:none}12%{color:var(--accent);text-shadow:0 0 12px var(--accent)}30%{color:var(--muted);text-shadow:none}}
+  .arch.in .node.core{animation:glow 3.2s ease-in-out infinite .4s}
+  @keyframes glow{0%,100%{box-shadow:0 0 0 0 transparent}18%{box-shadow:0 0 0 6px color-mix(in srgb,var(--accent) 22%,transparent)}40%{box-shadow:0 0 0 0 transparent}}
+
+  /* gate step: the approval line fills in */
+  .steps li.gate{position:relative}
+  .js .steps li.gate.in::after{content:"";position:absolute;left:0;top:-2px;height:2px;background:var(--accent);animation:fill 1.2s ease-out .5s both}
+  @keyframes fill{from{width:0}to{width:100%}}
+
+  .btn{transition:transform .15s ease,border-color .15s ease}
+  .btn:hover{transform:translateY(-1px)}
+  .stat,.card,.moment{transition:border-color .2s ease}
+  .stat:hover,.card:hover,.moment:hover{border-color:var(--line-strong)}
+}
 </style>
 </head>
 <body>
@@ -166,7 +205,7 @@ footer a{text-decoration:none;border-bottom:1px solid var(--line-strong)}
       <div class="hero-mark" aria-hidden="true">
         <svg viewBox="0 0 360 96">
           <line x1="0" y1="94" x2="360" y2="94" stroke="var(--line-strong)" stroke-width="1"/>
-          <g transform="rotate(-3 180 44)">
+          <g class="lever" transform="rotate(-3 180 44)">
             <rect x="20" y="40" width="320" height="8" rx="4" fill="currentColor"/>
             <circle cx="46" cy="28" r="12" fill="none" stroke="var(--muted)" stroke-width="2"/>
             <circle cx="314" cy="28" r="12" fill="none" stroke="currentColor" stroke-width="2"/>
@@ -346,6 +385,54 @@ pending <span class="p">→</span> human approves <span class="p">→</span> <sp
   chart.classList.add('js-anim');
   var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){chart.classList.add('drawn');io.disconnect();}});},{threshold:0.4});
   io.observe(chart);
+})();
+
+// Scroll reveal, count-up stats and the architecture loop. Skipped entirely with reduced motion,
+// so the static page (with its final numbers) is what those visitors and crawlers see.
+(function(){
+  if(!('IntersectionObserver' in window))return;
+  if(window.matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  document.documentElement.classList.add('js');
+  var groups=[
+    ['section h2, section .lede, #evidence > .wrap > p.muted',0],
+    ['.stat',.12],['.steps li',.12],['.moment',.08],['.moment .term',0],
+    ['.node',.1],['.card',.12]
+  ];
+  groups.forEach(function(g){
+    var els=document.querySelectorAll(g[0]);
+    Array.prototype.forEach.call(els,function(el,i){
+      if(el.closest('.hero'))return;
+      el.classList.add('reveal');
+      if(g[1])el.style.setProperty('--d',(i*g[1]).toFixed(2)+'s');
+    });
+  });
+  // Count up to the exact final text; the HTML keeps the real values.
+  function countUp(el){
+    var final=el.textContent, m=final.match(/^(\D*)(\d+(?:\.\d+)?)(\D*)$/);
+    if(!m)return;
+    var target=parseFloat(m[2]), start=null, dur=1300;
+    function frame(t){
+      if(start===null)start=t;
+      var p=Math.min((t-start)/dur,1), e=1-Math.pow(1-p,3);
+      el.textContent=m[1]+Math.round(target*e)+m[3];
+      if(p<1)requestAnimationFrame(frame);else el.textContent=final;
+    }
+    requestAnimationFrame(frame);
+  }
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){
+      if(!e.isIntersecting)return;
+      e.target.classList.add('in');
+      var term=e.target.classList.contains('moment')&&e.target.querySelector('.term');
+      if(term)setTimeout(function(){term.classList.add('in')},350);
+      if(e.target.classList.contains('stat')){var n=e.target.querySelector('.n');if(n)setTimeout(function(){countUp(n)},parseFloat(getComputedStyle(e.target).getPropertyValue('--d'))*1000||0);}
+      io.unobserve(e.target);
+    });
+  },{threshold:0.2,rootMargin:'0px 0px -8% 0px'});
+  // A clipped term card has no visible area, so it is triggered by its .moment instead of observed itself.
+  Array.prototype.forEach.call(document.querySelectorAll('.reveal:not(.term)'),function(el){io.observe(el)});
+  var arch=document.querySelector('.arch');
+  if(arch)new IntersectionObserver(function(es,o){if(es[0].isIntersecting){arch.classList.add('in');o.disconnect();}},{threshold:0.3}).observe(arch);
 })();
 </script>
 </body>
