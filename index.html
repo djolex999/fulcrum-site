@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Fulcrum</title>
+<meta name="description" content="Fulcrum is the only door between AI agents and an Adapty account. Agents read everything; every change passes the declared goal, a calibrated stopping boundary, a policy and a human approval.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#f7f6f2; --surface:#ffffff; --ink:#15161a; --muted:#5d6068; --line:#e3e1da;
+  --accent:#1f6f5c; --accent-ink:#ffffff; --warn:#b4462f; --ok:#1f6f5c; --chip:#efede6;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1012; --surface:#17181c; --ink:#ececea; --muted:#9a9ca3; --line:#2a2c31;
+    --accent:#4fbf9f; --accent-ink:#0f1012; --warn:#e2765d; --ok:#4fbf9f; --chip:#202227;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1012; --surface:#17181c; --ink:#ececea; --muted:#9a9ca3; --line:#2a2c31;
+  --accent:#4fbf9f; --accent-ink:#0f1012; --warn:#e2765d; --ok:#4fbf9f; --chip:#202227;
+}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:16px/1.6 Inter,system-ui,sans-serif;-webkit-font-smoothing:antialiased}
+a{color:var(--accent)}
+.wrap{max-width:1040px;margin:0 auto;padding:0 16px}
+code,.mono{font-family:"JetBrains Mono",ui-monospace,monospace;font-size:.92em}
+nav{display:flex;justify-content:space-between;align-items:center;padding:20px 0}
+.brand{font-weight:800;letter-spacing:-.02em;font-size:20px;display:flex;align-items:center;gap:10px}
+.brand svg{width:26px;height:26px}
+nav a.btn{font-size:14px}
+.btn{display:inline-block;padding:10px 16px;border-radius:10px;text-decoration:none;font-weight:600;border:1px solid var(--line);color:var(--ink);background:var(--surface)}
+.btn.primary{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+header.hero{padding:56px 0 40px}
+.eyebrow{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+h1{font-size:clamp(34px,6vw,60px);line-height:1.05;letter-spacing:-.035em;margin:14px 0 18px;font-weight:800;max-width:16ch}
+.lede{font-size:clamp(17px,2.2vw,20px);color:var(--muted);max-width:60ch;margin:0 0 28px}
+.cta{display:flex;gap:10px;flex-wrap:wrap}
+section{padding:48px 0;border-top:1px solid var(--line)}
+h2{font-size:clamp(24px,3.4vw,34px);letter-spacing:-.025em;line-height:1.15;margin:0 0 12px}
+.sub{color:var(--muted);max-width:62ch;margin:0 0 28px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px}
+.stat .n{font-size:44px;font-weight:800;letter-spacing:-.03em;line-height:1}
+.stat .n.bad{color:var(--warn)} .stat .n.good{color:var(--ok)}
+.stat p{margin:8px 0 0;color:var(--muted);font-size:15px}
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:14px;counter-reset:s}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;counter-increment:s}
+.step:before{content:counter(s);display:inline-grid;place-items:center;width:28px;height:28px;border-radius:8px;background:var(--chip);font-weight:700;font-size:14px;margin-bottom:10px}
+.step h3{margin:0 0 6px;font-size:17px}
+.step p{margin:0;color:var(--muted);font-size:15px}
+.scenes{display:grid;gap:14px}
+.scene{display:grid;grid-template-columns:1fr 1.1fr;gap:20px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px}
+@media (max-width:760px){.scene{grid-template-columns:1fr}}
+.scene h3{margin:0 0 8px;font-size:19px}
+.scene p{margin:0;color:var(--muted)}
+.tag{display:inline-block;font-size:12px;font-weight:700;padding:3px 8px;border-radius:6px;margin-bottom:10px;letter-spacing:.03em}
+.tag.block{background:color-mix(in srgb,var(--warn) 15%,transparent);color:var(--warn)}
+.tag.go{background:color-mix(in srgb,var(--ok) 15%,transparent);color:var(--ok)}
+.term{background:#121317;color:#dcdcd8;border-radius:10px;padding:14px 16px;font-family:"JetBrains Mono",monospace;font-size:13px;line-height:1.55;overflow-x:auto;white-space:pre}
+.term .k{color:#8fd3bf}.term .r{color:#f0937c}.term .g{color:#8fd3bf}.term .d{color:#8a8c93}
+.chart{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.chart svg{width:100%;height:auto;display:block}
+.legend{display:flex;gap:18px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin-top:8px}
+.legend i{display:inline-block;width:12px;height:3px;vertical-align:middle;margin-right:6px;border-radius:2px}
+.arch{display:flex;align-items:stretch;gap:10px;flex-wrap:wrap}
+.node{flex:1 1 180px;background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.node.core{border-color:var(--accent);box-shadow:0 0 0 1px var(--accent) inset}
+.node h3{margin:0 0 6px;font-size:16px}
+.node ul{margin:0;padding-left:18px;color:var(--muted);font-size:14px}
+.arrow{display:grid;place-items:center;color:var(--muted);font-size:22px}
+@media (max-width:760px){.arrow{transform:rotate(90deg);flex-basis:100%}}
+.built{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:14px}
+.built div{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:18px}
+.built h3{margin:0 0 6px;font-size:16px}
+.built p{margin:0;color:var(--muted);font-size:15px}
+footer{padding:32px 0 48px;color:var(--muted);font-size:14px;border-top:1px solid var(--line)}
+footer p{margin:4px 0}
+.pill{font-size:12px;background:var(--chip);border-radius:999px;padding:4px 10px;color:var(--muted)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="brand">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M4 24h24" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M16 24 11 14h10z" fill="var(--accent)"/><path d="M5 10l22 6" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/></svg>
+      Fulcrum
+    </div>
+    <a class="btn" href="https://github.com/djolex999/fulcrum">GitHub</a>
+  </nav>
+
+  <header class="hero">
+    <div class="eyebrow">Built at the Adapty Hackathon Belgrade · Nov 2026</div>
+    <h1>AI agents got the keys. Fulcrum is the only door.</h1>
+    <p class="lede">Adapty now lets AI agents change your paywall tests. Agents check results constantly, and that is exactly how fake winners ship. Fulcrum is an MCP server between the agent and Adapty: the agent reads everything, and every change passes statistics, a policy and a human before Fulcrum makes it.</p>
+    <div class="cta">
+      <a class="btn primary" href="https://github.com/djolex999/fulcrum">See the code</a>
+      <a class="btn" href="#how">How it works</a>
+    </div>
+  </header>
+
+  <section>
+    <h2>Peeking ships fake winners</h2>
+    <p class="sub">Check an A/B test every week and stop as soon as it looks significant, and you will call a winner in tests where there is no difference at all. An agent that checks every hour makes this mistake faster.</p>
+    <div class="stats">
+      <div class="stat"><div class="n bad">≈ 22%</div><p>fake winners with naive weekly peeking at p &lt; 0.05 (simulation of 200,000 A/A tests, 15 weekly looks)</p></div>
+      <div class="stat"><div class="n good">≈ 5%</div><p>fake winners with Fulcrum's calibrated stopping boundary, same tests</p></div>
+      <div class="stat"><div class="n">≈ $19k</div><p>extra revenue on the demo app from shipping a real winner at week 9 instead of letting it run (independent check: $17.5k)</p></div>
+    </div>
+  </section>
+
+  <section id="how">
+    <h2>How it works</h2>
+    <p class="sub">No Adapty tool, no CLI, no token: the agent's only path to a write is Fulcrum.</p>
+    <div class="steps">
+      <div class="step"><h3>The agent asks</h3><p>It reads tests and verdicts through Fulcrum's tools, then requests a stop or proposes a new test.</p></div>
+      <div class="step"><h3>Fulcrum judges</h3><p>Only on the test's declared goal metric, at its horizon, against a boundary that is strict early and relaxes later.</p></div>
+      <div class="step"><h3>Policy checks</h3><p>Allowed placements, challenger weight, daily write limit and approvers, from a policy file. Every block cites its rule.</p></div>
+      <div class="step"><h3>A human approves</h3><p>On a local approval page the agent cannot reach. Only then does Fulcrum run the change through the Adapty CLI, and the ledger records it.</p></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Three moments from the demo</h2>
+    <p class="sub">All numbers come from the hackathon's synthetic demo app ("Lumen"), replayed week by week.</p>
+    <div class="scenes">
+      <div class="scene">
+        <div>
+          <span class="tag block">BLOCKED · NOT YET</span>
+          <h3>The winner that wasn't</h3>
+          <p>On 16 August one arm of the Settings test led with p just under 0.05. An agent peeking that week would have shipped it. The boundary that week was 3.32; the evidence was 2.00. By the end, the other arm was ahead.</p>
+        </div>
+        <div class="chart" role="img" aria-label="z score by weekly look against the boundary. z peaks at 2.00 at look 6 while the boundary is 3.32, and never crosses.">
+          <svg viewBox="0 0 420 210" id="zchart"></svg>
+          <div class="legend"><span><i style="background:var(--warn)"></i>boundary c·√(K/k)</span><span><i style="background:var(--muted)"></i>naive 1.96</span><span><i style="background:var(--accent)"></i>z on the declared goal</span></div>
+        </div>
+      </div>
+      <div class="scene">
+        <div>
+          <span class="tag block">REFUSED · METRIC SHOPPING</span>
+          <h3>"Fine, justify it with payer rate"</h3>
+          <p>The test was set up to improve 30-day revenue per install. Switching metrics after the fact is metric shopping, and Fulcrum refuses it, whatever the wording, every time, and logs each attempt.</p>
+        </div>
+<div class="term"><span class="d">&gt; request_stop</span> { test: "Settings", metric: "payer_rate" }
+<span class="r">blocked</span>  METRIC_NOT_GOAL
+  declared goal: rpi_30d (test plan)
+  <span class="k">next:</span> ask judge_test on rpi_30d</div>
+      </div>
+      <div class="scene">
+        <div>
+          <span class="tag go">NOT YET → NOW</span>
+          <h3>A real winner, weeks early</h3>
+          <p>Onboarding is judged on 60-day revenue, so at week 2 the answer is "not yet": nobody has 60 days of data. At week 9 it clears the boundary (z 4.34 vs 2.71). A human approves and Fulcrum stops the test in Adapty.</p>
+        </div>
+<div class="term"><span class="d">week 2</span>  <span class="r">NOT YET</span>  BEFORE_HORIZON
+         next valid look: week 9
+<span class="d">week 9</span>  <span class="g">NOW</span>      z 4.34 vs boundary 2.71
+         winner: weekly first
+         <span class="k">pending</span> → human approves → stopped</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <h2>Architecture</h2>
+    <p class="sub">The token lives only in Fulcrum. The agent never sees Adapty's write tools, the CLI or the credentials.</p>
+    <div class="arch">
+      <div class="node"><h3>AI agent</h3><ul><li>Claude Code, sandboxed</li><li>one MCP server: Fulcrum</li><li>no tool, no CLI, no token</li></ul></div>
+      <div class="arrow">→</div>
+      <div class="node core"><h3>Fulcrum</h3><ul><li>declared goal + horizon</li><li>boundary c·√(K/k), as_of replay</li><li>policy file</li><li>pending action + ledger</li></ul></div>
+      <div class="arrow">→</div>
+      <div class="node"><h3>Human</h3><ul><li>approves on a local page</li><li>the agent can't reach it</li></ul></div>
+      <div class="arrow">→</div>
+      <div class="node"><h3>Adapty</h3><ul><li>stop with a winner</li><li>create the next test as a draft</li></ul></div>
+    </div>
+  </section>
+
+  <section>
+    <h2>How we built it</h2>
+    <p class="sub">Spec first, tests before code, and reviewers that didn't share our assumptions.</p>
+    <div class="built">
+      <div><h3>Spec → tests → code</h3><p>Every rule is an acceptance criterion with a test named after it: 188 tests, including a named attack suite.</p></div>
+      <div><h3>Independent reviewers</h3><p>Fresh AI reviewers saw only the diff and the spec. One found the agent could approve its own request; one killed a demo scene of ours that didn't hold up.</p></div>
+      <div><h3>Numbers checked twice</h3><p>An agent with no access to our code re-computed every number from the raw data before it went on a slide.</p></div>
+    </div>
+  </section>
+
+  <footer>
+    <p><strong>Fulcrum</strong> · Djordje Marković, Milica Petković · MIT license · <a href="https://github.com/djolex999/fulcrum">github.com/djolex999/fulcrum</a></p>
+    <p>All data is synthetic (the hackathon's demo app). Not affiliated with Adapty.</p>
+  </footer>
+</div>
+<script>
+(function(){
+  var svg=document.getElementById('zchart'); if(!svg) return;
+  var z=[null,null,null,null,0.72,2.00,1.55,0.76,0.53,-0.30,-0.17,-0.60,-1.04,-0.90,-0.82];
+  var K=15,c=2.1,W=420,H=210,L=34,R=24,T=10,B=28,ymin=-2,ymax=9;
+  function x(k){return L+(k-1)*(W-L-R)/(K-1)}
+  function y(v){return T+(ymax-v)*(H-T-B)/(ymax-ymin)}
+  var ns='http://www.w3.org/2000/svg',h='';
+  [0,2,4,6,8].forEach(function(v){h+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(v)+'" y2="'+y(v)+'" stroke="var(--line)"/><text x="'+(L-6)+'" y="'+(y(v)+4)+'" font-size="10" text-anchor="end" fill="var(--muted)">'+v+'</text>'});
+  [1,5,10,15].forEach(function(k){h+='<text x="'+x(k)+'" y="'+(H-8)+'" font-size="10" text-anchor="middle" fill="var(--muted)">look '+k+'</text>'});
+  var b='';for(var k=1;k<=K;k++){b+=(k==1?'M':'L')+x(k)+','+y(c*Math.sqrt(K/k))}
+  h+='<path d="'+b+'" fill="none" stroke="var(--warn)" stroke-width="2.5"/>';
+  h+='<line x1="'+L+'" x2="'+(W-R)+'" y1="'+y(1.96)+'" y2="'+y(1.96)+'" stroke="var(--muted)" stroke-dasharray="4 4"/>';
+  var p='';z.forEach(function(v,i){if(v===null)return;p+=(p?'L':'M')+x(i+1)+','+y(v)});
+  h+='<path d="'+p+'" fill="none" stroke="var(--accent)" stroke-width="2.5"/>';
+  z.forEach(function(v,i){if(v===null)return;h+='<circle cx="'+x(i+1)+'" cy="'+y(v)+'" r="'+(i==5?5:2.5)+'" fill="var(--accent)"/>'});
+  h+='<line x1="'+x(6)+'" x2="'+x(6)+'" y1="'+y(2.0)+'" y2="'+y(3.32)+'" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="3 3"/>';
+  h+='<circle cx="'+x(6)+'" cy="'+y(3.32)+'" r="3.5" fill="var(--warn)"/>';
+  h+='<text x="'+x(7)+'" y="'+y(7)+'" font-size="11" font-weight="700" fill="var(--ink)">16 Aug (look 6)</text>';
+  h+='<text x="'+x(7)+'" y="'+(y(7)+15)+'" font-size="11" fill="var(--muted)">z 2.00 vs boundary 3.32</text>';
+  h+='<text x="'+x(7)+'" y="'+(y(7)+30)+'" font-size="11" fill="var(--muted)">naive p 0.045 → blocked</text>';
+  svg.innerHTML=h;
+})();
+</script>
+</body>
+</html>
